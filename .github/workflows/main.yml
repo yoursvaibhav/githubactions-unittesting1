@@ -1,0 +1,34 @@
+name: ETL CICD pipeline with test cases
+
+#trigger
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: setup python
+        uses: actions/checkout@v2
+        with:
+          python-version: "3.10"
+
+      - name: install dependancies
+        uses: pip install -r requirements.txt
+
+      - name: run tests & enforce coverage
+        run: pytest --cov=calc --cov-report=term
+
+  deploy-job:
+    runs-on: ubuntu-latest
+    needs: test-job
+
+    steps:
+      - name: print message
+        run: echo "deployment job started..."
